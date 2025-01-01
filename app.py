@@ -67,7 +67,7 @@ def vector_embedding():
         #Create FAISS Vector Store: Finally, this line creates a FAISS vector store using the document chunks (final_documents) and their corresponding embeddings (embeddings). The FAISS vector store is useful for efficient similarity search and retrieval of relevant documents. The vectors are stored in the session state as vectors.
 prompt1=st.text_input("Enter your question regarding Dr.APJ Kalam sir")
 
-if st.button("Click me"):
+if prompt1 is not None:
     vector_embedding()
     st.markdown('<p style="color:#D14A8C; font-weight:bold;">Great question!!</p>', unsafe_allow_html=True)
 
