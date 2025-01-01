@@ -52,13 +52,19 @@ Questions:{input}
 
 def vector_embedding():
     if "vectors" not in st.session_state:
+        # Purpose: This line checks if the 'vectors' key already exists in the session state. If it does, it means the vector embeddings have already been generated, and the function will not re-run. This is useful for efficiency, preventing repeated calculations.
         st.session_state.embeddings=GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        #Initialize Embeddings Model: This line initializes the Google Generative AI Embeddings model with a specified model name ("models/embedding-001"). The embeddings model is used to convert chunks of text into vector representations.
         st.session_state.loader=PyPDFDirectoryLoader("./pdf") #Data ingestion
+        #Load PDF Documents: This line creates a PyPDFDirectoryLoader to load PDF files from the directory specified ("./pdf"). This loader helps in ingesting the data from PDF files.
         st.session_state.docs=st.session_state.loader.load() #Data loading
+        #Store Documents: The load method is called on the loader object to load the PDF documents, and the loaded documents are stored in the session state as docs.
         st.session_state.text_splitter=RecursiveCharacterTextSplitter(chunk_size=1000,chunk_overlap=200)
+        #Initialize Text Splitter: This line initializes a text splitter (RecursiveCharacterTextSplitter) with a chunk size of 1000 characters and an overlap of 200 characters. This means each chunk of text will be 1000 characters long, with 200 characters overlapping between chunks. This helps in dividing large documents into smaller, manageable pieces.
         st.session_state.final_documents=st.session_state.text_splitter.split_documents(st.session_state.docs)
+        #Split Documents: The split_documents method is called on the text splitter to split the loaded documents into smaller chunks. The resulting chunks are stored in the session state as final_documents.
         st.session_state.vectors=FAISS.from_documents(st.session_state.final_documents,st.session_state.embeddings)
-        
+        #Create FAISS Vector Store: Finally, this line creates a FAISS vector store using the document chunks (final_documents) and their corresponding embeddings (embeddings). The FAISS vector store is useful for efficient similarity search and retrieval of relevant documents. The vectors are stored in the session state as vectors.
 prompt1=st.text_input("Enter your question regarding Dr.APJ Kalam sir")
 
 if st.button("Click me"):
